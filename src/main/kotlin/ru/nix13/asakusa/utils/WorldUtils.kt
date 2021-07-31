@@ -6,11 +6,11 @@ import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 
 object WorldUtils {
-    fun getBlock(world: World, pos: BlockPos): Block {
+    fun getBlock(world: World, pos: Coordinates): Block {
         return world.getBlock(pos.x, pos.y, pos.z)
     }
 
-    fun getBlockMeta(world: World, pos: BlockPos): Int {
+    fun getBlockMeta(world: World, pos: Coordinates): Int {
         val block = world.getBlock(pos.x, pos.y, pos.z)
         return block.getDamageValue(world, pos.x, pos.y, pos.z)
     }
@@ -27,89 +27,51 @@ object WorldUtils {
         world.setBlockToAir(x, y, z)
     }
 
-    fun digBlock(world: World, pos: BlockPos) {
+    fun digBlock(world: World, pos: Coordinates) {
         val block = world.getBlock(pos.x, pos.y, pos.z)
         block.dropBlockAsItem(world, pos.x, pos.y, pos.z, 0, 0)
         world.setBlockToAir(pos.x, pos.y, pos.z)
     }
 
-    fun digBlock(world: World, pos: BlockPos, fortune: Int) {
+    fun digBlock(world: World, pos: Coordinates, fortune: Int) {
         val block = world.getBlock(pos.x, pos.y, pos.z)
         block.dropBlockAsItem(world, pos.x, pos.y, pos.z, 0, fortune)
         world.setBlockToAir(pos.x, pos.y, pos.z)
     }
 
-    fun countBlocks(range: Int, player: EntityPlayer, pos: BlockPos, world: World): Int {
-        val size = range / 2
-        var diggedBlocks = 0
-        println(EntityUtils.raytraceFromEntityDirection(world, player, 6.0))
-        for(i in -size..size) {
-            for(j in -size..size) {
-                when(EntityUtils.raytraceFromEntityDirection(world, player, 6.0)) {
-                    ForgeDirection.SOUTH, ForgeDirection.NORTH -> {
-                        val blockPos = BlockPos(pos.x + i, pos.y + j, pos.z)
-                        val block = getBlock(world, blockPos)
-                        val meta = getBlockMeta(world, blockPos)
-
-                        if(block.isToolEffective("pickaxe", meta) || block.isToolEffective("shovel", meta))
-                            diggedBlocks++
-                    }
-                    ForgeDirection.EAST, ForgeDirection.WEST -> {
-                        val blockPos = BlockPos(pos.x, pos.y + i, pos.z + j)
-                        val block = getBlock(world, blockPos)
-                        val meta = getBlockMeta(world, blockPos)
-
-                        if(block.isToolEffective("pickaxe", meta) || block.isToolEffective("shovel", meta))
-                            diggedBlocks++
-                    }
-                    ForgeDirection.DOWN, ForgeDirection.UP -> {
-                        val blockPos = BlockPos(pos.x + i, pos.y, pos.z + j)
-                        val block = getBlock(world, blockPos)
-                        val meta = getBlockMeta(world, blockPos)
-
-                        if(block.isToolEffective("pickaxe", meta) || block.isToolEffective("shovel", meta))
-                            diggedBlocks++
-                    }
-                    else -> {}
-                }
-            }
-        }
-        return diggedBlocks
-    }
-
-    fun digHole(range: Int, player: EntityPlayer, pos: BlockPos, world: World, fortune: Int): Int {
+    fun digHole(range: Int, player: EntityPlayer, pos: Coordinates, world: World, fortune: Int): Int {
         val size = range / 2
         var diggedBlocks = 0
         for(i in -size..size) {
             for(j in -size..size) {
                 when(EntityUtils.raytraceFromEntityDirection(world, player, 6.0)) {
                     ForgeDirection.SOUTH, ForgeDirection.NORTH -> {
-                        val blockPos = BlockPos(pos.x + i, pos.y + j, pos.z)
-                        val block = getBlock(world, blockPos)
-                        val meta = getBlockMeta(world, blockPos)
+                        val coordinates = Coordinates(pos.x + i, pos.y + j, pos.z)
+                        val block = getBlock(world, coordinates)
+                        val meta = getBlockMeta(world, coordinates)
 
                         if(block.isToolEffective("pickaxe", meta) || block.isToolEffective("shovel", meta)) {
-                            digBlock(world, blockPos, fortune)
+                            digBlock(world, coordinates, fortune)
                             diggedBlocks++
                         }
                     }
                     ForgeDirection.EAST, ForgeDirection.WEST -> {
-                        val blockPos = BlockPos(pos.x, pos.y + i, pos.z + j)
-                        val block = getBlock(world, blockPos)
-                        val meta = getBlockMeta(world, blockPos)
+                        val coordinates = Coordinates(pos.x, pos.y + i, pos.z + j)
+                        val block = getBlock(world, coordinates)
+                        val meta = getBlockMeta(world, coordinates)
 
                         if(block.isToolEffective("pickaxe", meta) || block.isToolEffective("shovel", meta)) {
-                            digBlock(world, blockPos, fortune)
+                            digBlock(world, coordinates, fortune)
                             diggedBlocks++
                         }
                     }
                     ForgeDirection.DOWN, ForgeDirection.UP -> {
-                        val blockPos = BlockPos(pos.x + i, pos.y, pos.z + j)
-                        val block = getBlock(world, blockPos)
-                        val meta = getBlockMeta(world, blockPos)
+                        val coordinates = Coordinates(pos.x + i, pos.y, pos.z + j)
+                        val block = getBlock(world, coordinates)
+                        val meta = getBlockMeta(world, coordinates)
 
                         if(block.isToolEffective("pickaxe", meta) || block.isToolEffective("shovel", meta)) {
-                            digBlock(world, blockPos, fortune)
+                            digBlock(world, coordinates, fortune)
                             diggedBlocks++
                         }
                     }

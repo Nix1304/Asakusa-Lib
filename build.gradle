@@ -31,7 +31,7 @@ repositories {
     mavenCentral()
 }
 
-version = "1.0.0"
+version = "1.0.1"
 archivesBaseName = "asakusalib"
 
 minecraft {
@@ -52,6 +52,10 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     configurations.shade.each {
         from project.zipTree(it)
+    }
+
+    manifest {
+        attributes 'FMLCorePlugin': 'ru.nix13.asakusa.hooks.AsakusaHookLoader'
     }
 
     exclude '**/*.kotlin_metadata'
