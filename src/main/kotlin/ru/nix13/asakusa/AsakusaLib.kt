@@ -4,14 +4,16 @@ import cpw.mods.fml.common.*
 import cpw.mods.fml.common.event.FMLConstructionEvent
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.common.MinecraftForge
+import org.apache.logging.log4j.Logger
 
 @Mod(modid = AsakusaLib.modId, name = AsakusaLib.name, version = AsakusaLib.version)
 class AsakusaLib {
     companion object {
         const val modId = "asakusa-lib"
-        const val name = "Asakusa Lib"
+        const val name = "AsakusaLib"
         const val version = "1.0.1"
-        const val updateUrl = "https://nix13.pw/asakusa_lib.json"
+        const val updateUrl = "https://nix13.pw/mods/asakusa_lib.json"
+        lateinit var logger: Logger
     }
 
     @Mod.EventHandler
@@ -43,6 +45,7 @@ class AsakusaLib {
 
     @Mod.EventHandler
     fun preInit(e: FMLPreInitializationEvent) {
+        logger = e.modLog
         modMetadata(e.modMetadata)
     }
 
