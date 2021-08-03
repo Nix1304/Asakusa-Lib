@@ -2,11 +2,15 @@ package ru.nix13.asakusa
 
 import cpw.mods.fml.common.*
 import cpw.mods.fml.common.event.FMLConstructionEvent
+import cpw.mods.fml.common.event.FMLInitializationEvent
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.common.MinecraftForge
 import org.apache.logging.log4j.Logger
+import ru.nix13.asakusa.config.ConfigHandler
+import ru.nix13.asakusa.network.NetworkManager
+import ru.nix13.asakusa.network.NetworkManager.searchPackets
 
-@Mod(modid = AsakusaLib.modId, name = AsakusaLib.name, version = AsakusaLib.version)
+@Mod(modid = AsakusaLib.modId, name = AsakusaLib.name, version = AsakusaLib.version, guiFactory = "ru.nix13.asakusa.client.gui.GuiFactory")
 class AsakusaLib {
     companion object {
         const val modId = "asakusa-lib"
@@ -27,7 +31,7 @@ class AsakusaLib {
             val targets = modData.get(EventBusSubscriber::class.java.name)
 
             targets.forEach { target ->
-                FMLLog.getLogger().debug("Registering @EventBusSubscriber for {} for mod {}", target.className, mod.modId)
+                FMLLog.getLogger().info("Registering @EventBusSubscriber for {} for mod {}", target.className, mod.modId)
                 val subscriptionTarget = Class.forName(target.className, false, mcl)
 
                 var instance: Any? = null
@@ -38,15 +42,23 @@ class AsakusaLib {
 
                 MinecraftForge.EVENT_BUS.register(instance)
                 FMLCommonHandler.instance().bus().register(instance)
-                FMLLog.getLogger().debug("Injected @EventBusSubscriber class {}", target.className)
+                FMLLog.getLogger().info("Injected @EventBusSubscriber class {}", target.className)
             }
         }
+
+        searchPackets(e.asmHarvestedData)
     }
 
     @Mod.EventHandler
     fun preInit(e: FMLPreInitializationEvent) {
         logger = e.modLog
+        ConfigHandler.init(e.modConfigurationDirectory.path)
         modMetadata(e.modMetadata)
+    }
+
+    @Mod.EventHandler
+    fun preInit(e: FMLInitializationEvent) {
+        NetworkManager.registerPackets()
     }
 
     private fun modMetadata(meta: ModMetadata) {

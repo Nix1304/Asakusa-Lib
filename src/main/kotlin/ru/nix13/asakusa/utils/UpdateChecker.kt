@@ -7,7 +7,6 @@ import java.io.FileNotFoundException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.URL
-import kotlin.jvm.Throws
 
 data class UpdateInfo(val homepage: String, val modVersionRecommended: String, val modVersionLatest: String, val changelogRecommended: String, val changelogLatest: String)
 
@@ -32,7 +31,7 @@ object UpdateChecker {
                     val modVersionLatest = promos.asJsonObject.get("$mcVersion-latest").asString
                     val changelogRecommended = jsonTree.asJsonObject.get(mcVersion).asJsonObject.get(modVersionRecommended).asString
                     val changelogLatest = jsonTree.asJsonObject.get(mcVersion).asJsonObject.get(modVersionLatest).asString
-                    UpdateInfo(homepage, modVersionRecommended, modVersionLatest, changelogRecommended, changelogLatest)
+                    return UpdateInfo(homepage, modVersionRecommended, modVersionLatest, changelogRecommended, changelogLatest)
                 }
             }
         } catch (e: Exception) {
