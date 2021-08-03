@@ -15,7 +15,7 @@ class AsakusaLib {
     companion object {
         const val modId = "asakusa-lib"
         const val name = "AsakusaLib"
-        const val version = "1.0.1"
+        const val version = "1.1.0"
         const val updateUrl = "https://nix13.pw/mods/asakusa_lib.json"
         lateinit var logger: Logger
     }

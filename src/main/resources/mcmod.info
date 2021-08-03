@@ -1,7 +1,7 @@
 [{
   "modid": "asakusa-lib",
   "name": "AsakusaLib",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "mcversion": "1.7.10",
   "url": "https://www.curseforge.com/minecraft/mc-mods/asakusalib",
   "updateUrl": "https://nix13.pw/mods/asakusa_lib.json",
